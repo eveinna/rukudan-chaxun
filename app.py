@@ -377,12 +377,16 @@ def _show_damage_data():
         products = ["全部"] + sorted(df['商品名称'].dropna().astype(str).unique().tolist())
         product_filter = st.selectbox("选择商品", products, key="filter_product")
 
-    filter_cols2 = st.columns([2, 2, 1])
+    filter_cols2 = st.columns([2, 2, 2, 1])
     with filter_cols2[0]:
+        st.markdown("**供货商**")
+        suppliers = ["全部"] + sorted(df['供应商名称'].dropna().astype(str).unique().tolist())
+        supplier_filter = st.selectbox("选择供货商", suppliers, key="filter_supplier")
+    with filter_cols2[1]:
         st.markdown("**报损原因**")
         reasons = ["全部"] + sorted(df['报损原因'].dropna().astype(str).unique().tolist())
         reason_filter = st.selectbox("选择原因", reasons, key="filter_reason")
-    with filter_cols2[1]:
+    with filter_cols2[2]:
         st.markdown("**处理方式**")
         methods = ["全部"] + sorted(df['处理方式'].dropna().astype(str).unique().tolist())
         method_filter = st.selectbox("选择方式", methods, key="filter_method")
@@ -395,6 +399,8 @@ def _show_damage_data():
         filtered = filtered[filtered['门店名称'].astype(str) == store_filter]
     if product_filter != "全部":
         filtered = filtered[filtered['商品名称'].astype(str) == product_filter]
+    if supplier_filter != "全部":
+        filtered = filtered[filtered['供应商名称'].astype(str) == supplier_filter]
     if reason_filter != "全部":
         filtered = filtered[filtered['报损原因'].astype(str) == reason_filter]
     if method_filter != "全部":
