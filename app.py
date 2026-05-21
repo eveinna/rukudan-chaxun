@@ -89,8 +89,7 @@ def login_page():
             else:
                 st.error("用户名或密码错误！")
         
-        st.markdown("---")
-        st.caption("默认账号：admin / admin123")
+        # 默认账号提示已隐藏
 
 # ===================== 数据加载 =====================
 @st.cache_data(ttl=300)  # 缓存5分钟
