@@ -317,10 +317,15 @@ def _show_damage_data():
         st.metric("板块数量", f"{df['板块名称'].nunique()} 个")
 
     st.markdown("#### 各板块明细")
-    section_stats = df.groupby('板块名称').agg(
+    # 先转换数值列，处理非数字值
+    df_agg = df.copy()
+    df_agg['金额报损_num'] = pd.to_numeric(df_agg['金额报损'], errors='coerce').fillna(0)
+    df_agg['破损重量_num'] = pd.to_numeric(df_agg['破损重量'], errors='coerce').fillna(0)
+    
+    section_stats = df_agg.groupby('板块名称').agg(
         记录数=('序号', 'count'),
-        总金额=('金额报损', 'sum'),
-        总重量=('破损重量', 'sum')
+        总金额=('金额报损_num', 'sum'),
+        总重量=('破损重量_num', 'sum')
     ).reset_index()
     section_stats['总金额'] = section_stats['总金额'].apply(lambda x: f"¥{x:,.2f}")
     section_stats['总重量'] = section_stats['总重量'].apply(lambda x: f"{x:,.1f} kg")
