@@ -405,8 +405,18 @@ def _show_damage_data():
     st.markdown(f"### 📋 数据明细（筛选后 {len(filtered)} 条）")
 
     display_cols = [c for c in filtered.columns if c not in ['售后日期_dt']]
+    
+    # 转换数据为可显示格式（避免类型不兼容错误）
+    display_df = filtered[display_cols].copy()
+    for col in display_df.columns:
+        if col == '售后日期':
+            display_df[col] = display_df[col].apply(convert_excel_date)
+        else:
+            # 统一转为字符串，避免混合类型导致渲染失败
+            display_df[col] = display_df[col].astype(str).replace('nan', '').replace('None', '')
+    
     st.dataframe(
-        filtered[display_cols],
+        display_df,
         use_container_width=True,
         height=400,
         hide_index=True,
